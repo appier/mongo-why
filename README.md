@@ -6,9 +6,9 @@ Tells you why mongo fails to validate your document.
 Load `why.js` into mongo shell, then use `why(<name of collection>, <the document you want to insert>)`
 
 ```
-$ mongo
-> load('why.js')
-true
+$ mongo --shell path/to/why.js
+MongoDB shell version: 3.2.4
+type "help" for help
 > why('users', {name: 123})
 -------------------------
 Unmatched validator rules
