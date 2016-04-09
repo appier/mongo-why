@@ -4,11 +4,12 @@ function isMatched(validator, doc) {
   db.runCommand({collMod: COLLECTION, validator})
   result = db.getCollection(COLLECTION).insert(doc)
 
-  return result.ok
+  return result.nInserted === 1
 }
 
 function traverseValidator(topValidator, newDoc){
   var queue = [{validator: topValidator, keyPath: []}]
+  var hasError = false
 
   while(queue.length) {
     var {validator, keyPath, isLeaf} = queue.shift()
@@ -28,6 +29,7 @@ function traverseValidator(topValidator, newDoc){
     if(isLeaf || typeof validator !== 'object') {
       print('Not matching:')
       print(JSON.stringify(wrappedValidator, null, '  '))
+      hasError = true
       continue;
     }
 
@@ -54,6 +56,10 @@ function traverseValidator(topValidator, newDoc){
         })
       }
     })
+  }
+
+  if(!hasError) {
+    print('No validation error is encountered.')
   }
 }
 
