@@ -9,12 +9,21 @@ Load `why.js` into mongo shell, then use `why(<name of collection>, <the documen
 $ mongo
 > load('why.js')
 true
-> why('collectionName', {...The document that failed to insert...})
+> why('users', {name: 123})
 -------------------------
 Unmatched validator rules
 -------------------------
 [
-  ...
+  {
+    "name": {
+      "$type": "string"
+    }
+  },
+  {
+    "password": {
+      "$exists": true
+    }
+  }
 ]
 ```
 
