@@ -64,13 +64,13 @@ function why(collectionName, doc, options={}){
   var collectionInfos = db.getCollectionInfos().filter(({name}) => name === collectionName)
 
   if(!collectionInfos.length) {
-    print(collectionName, 'does not exist.')
-    return
+    if(!options.quiet) print(collectionName, 'does not exist.')
+    return null
   }
 
   if(!collectionInfos[0].options.validator) {
-    print(collectionName, 'does not hava validator.')
-    return
+    if(!options.quiet) print(collectionName, 'does not have a validator.')
+    return null
   }
 
   db.createCollection(COLLECTION)
