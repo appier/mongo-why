@@ -1,8 +1,12 @@
 const COLLECTION = '__WHY_COLLECTION__'
 
 function isMatched(validator, doc) {
-  db.runCommand({collMod: COLLECTION, validator})
+
+  // Re-creating colleciton everytime so that documents with _id don't conflict
+  //
+  db.createCollection(COLLECTION, {validator})
   result = db.getCollection(COLLECTION).insert(doc)
+  db.getCollection(COLLECTION).drop()
 
   return result.nInserted === 1
 }
@@ -73,9 +77,7 @@ function why(collectionName, doc, options={}){
     return null
   }
 
-  db.createCollection(COLLECTION)
   var errors = traverseValidator(collectionInfos[0].options.validator, doc)
-  db.getCollection(COLLECTION).drop()
 
   if(!options.quiet) {
     if(errors.length) {

@@ -52,12 +52,18 @@ const SPEC = [{
   }, {
     value: {$lt: 3}
   }]
+}, {
+  // should work with documents with _id
+  //
+  validator: {value: {$type: 'number', $gt: 1, $lt: 4}},
+  doc: {_id: 'foo', value: 6},
+  expected: [{value: {$lt: 4}}],
 }]
 
-function assertEqual(obj1, obj2) {
+function assertEqual(obj1, obj2, idx) {
   var str1 = JSON.stringify(obj1, null, '  ')
   var str2 = JSON.stringify(obj2, null, '  ')
-  assert(str1 === str2, `\n=== Not Equal ===\n${str1}\n-----------------\n${str2}\n=================\n`)
+  assert(str1 === str2, `\n=== #${idx} Failed ===\n${str1}\n-----------------\n${str2}\n=================\n`)
 }
 
 // Setup test collection
@@ -73,7 +79,7 @@ SPEC.forEach(({validator, doc, expected}, idx) => {
   }
 
   var result = why(TEST_COLLECTION, doc, {quiet: true})
-  assertEqual(result, expected)
+  assertEqual(result, expected, idx)
 })
 
 db.getCollection(TEST_COLLECTION).drop()
