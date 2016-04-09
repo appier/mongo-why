@@ -2,7 +2,7 @@ const COLLECTION = '__WHY_COLLECTION__'
 
 function isMatched(validator, doc) {
 
-  // Re-creating colleciton everytime so that documents with _id don't conflict
+  // Re-create collection everytime so that documents with _id don't conflict
   //
   db.createCollection(COLLECTION, {validator})
   result = db.getCollection(COLLECTION).insert(doc)
