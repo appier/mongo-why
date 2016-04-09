@@ -9,7 +9,7 @@ function isMatched(validator, doc) {
 
 function traverseValidator(topValidator, newDoc){
   var queue = [{validator: topValidator, keyPath: []}]
-  var hasError = false
+  var errors = []
 
   while(queue.length) {
     var {validator, keyPath, isLeaf} = queue.shift()
@@ -27,9 +27,7 @@ function traverseValidator(topValidator, newDoc){
     // Print error and skip if validator cannot be expanded anymore
     //
     if(isLeaf || typeof validator !== 'object') {
-      print('Not matching:')
-      print(JSON.stringify(wrappedValidator, null, '  '))
-      hasError = true
+      errors.push(wrappedValidator)
       continue;
     }
 
@@ -58,12 +56,10 @@ function traverseValidator(topValidator, newDoc){
     })
   }
 
-  if(!hasError) {
-    print('No validation error is encountered.')
-  }
+  return errors
 }
 
-function why(collectionName, doc){
+function why(collectionName, doc, options={}){
 
   var collectionInfos = db.getCollectionInfos().filter(({name}) => name === collectionName)
 
@@ -78,6 +74,19 @@ function why(collectionName, doc){
   }
 
   db.createCollection(COLLECTION)
-  traverseValidator(collectionInfos[0].options.validator, doc)
+  var errors = traverseValidator(collectionInfos[0].options.validator, doc)
   db.getCollection(COLLECTION).drop()
+
+  if(!options.quiet) {
+    if(errors.length) {
+      print('-------------------------')
+      print('Unmatched validator rules')
+      print('-------------------------')
+      print(JSON.stringify(errors, null, '  '))
+    }else{
+      print('The given document passes validation.')
+    }
+  }else{
+    return errors
+  }
 }
