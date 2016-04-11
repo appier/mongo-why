@@ -1,0 +1,24 @@
+{
+  "name": "mongo-why",
+  "version": "0.0.1",
+  "description": "Tells you why mongodb fails to validate your document",
+  "main": "why.js",
+  "scripts": {
+    "test": "mongo test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrOrz/mongo-why.git"
+  },
+  "keywords": [
+    "mongodb",
+    "validation",
+    "validator"
+  ],
+  "author": "MrOrz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MrOrz/mongo-why/issues"
+  },
+  "homepage": "https://github.com/MrOrz/mongo-why#readme"
+}
