@@ -19,13 +19,33 @@ const SPEC = [{
   doc: {name: 123},
   expected: []
 }, {
-  // Nested key-value
+  // Nested key-value (exact match)
+  //
+  validator: {properties: {name: {$type: 'string'}}},
+  doc: {properties: {name: '123'}},
+  expected: []
+}, {
+  // Nested key-value (exact match)
   //
   validator: {properties: {name: {$exists: true}}},
   doc: {properties: {foo: 123}},
   expected: [{
     'properties.name': {$exists: true}
   }]
+}, {
+  // Nested key-value (dot notation)
+  //
+  validator: {'properties.name': {$exists: true}},
+  doc: {properties: {foo: 123}},
+  expected: [{
+    'properties.name': {$exists: true}
+  }]
+}, , {
+  // Nested key-value (dot notation)
+  //
+  validator: {'properties.name': {$type: 'string'}},
+  doc: {properties: {name: 'hi'}},
+  expected: []
 }, {
   // Multiple $ rules
   //
