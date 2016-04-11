@@ -58,6 +58,16 @@ const SPEC = [{
   validator: {value: {$type: 'number', $gt: 1, $lt: 4}},
   doc: {_id: 'foo', value: 6},
   expected: [{value: {$lt: 4}}],
+}, {
+  // should work with array
+  //
+  validator: {value: {$elemMatch: {$type: 'number'}}},
+  doc: {value: [123]},
+  expected: [],
+}, {
+  validator: {value: {$elemMatch: {$type: 'number'}}},
+  doc: {value: ['123']},
+  expected: [{value: {$elemMatch: {$type: 'number'}}}],
 }]
 
 function assertEqual(obj1, obj2, idx) {
