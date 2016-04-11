@@ -88,6 +88,27 @@ const SPEC = [{
   validator: {value: {$elemMatch: {$type: 'number'}}},
   doc: {value: ['123']},
   expected: [{value: {$elemMatch: {$type: 'number'}}}],
+}, {
+  validator: {
+		"$or" : [
+      {
+        "value" : {
+          "nested" : {
+            "$type" : "string"
+          },
+        }
+      },
+			{
+				"value" : {
+					"$exists" : false
+				}
+			},
+		]
+  },
+  doc: {
+    value: { nested: 'foo'},
+  },
+  expected: [],
 }]
 
 function assertEqual(obj1, obj2, idx) {
