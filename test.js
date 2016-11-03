@@ -1,11 +1,14 @@
 load('why.js')
 
+// Setup test collection
+const TEST_COLLECTION = '__TEST_COLLECTION__'
+
 const SPEC = [{
   // empty validator
   //
   validator: {},
   doc: {ha: 1},
-  expected: null // Triggers "don't have a validator" logic
+  expected: new Error(TEST_COLLECTION + ' does not have a validator.')
 }, {
   // Simple key-value
   //
@@ -117,9 +120,6 @@ function assertEqual(obj1, obj2, idx) {
   assert(str1 === str2, `\n=== #${idx} Failed ===\n${str1}\n-----------------\n${str2}\n=================\n`)
 }
 
-// Setup test collection
-const TEST_COLLECTION = '__TEST_COLLECTION__'
-
 db.createCollection(TEST_COLLECTION)
 
 SPEC.forEach(({validator, doc, expected}, idx) => {
@@ -129,8 +129,16 @@ SPEC.forEach(({validator, doc, expected}, idx) => {
     return
   }
 
-  var result = why(TEST_COLLECTION, doc, {quiet: true})
-  assertEqual(result, expected, idx)
+  try {
+    var result = why(TEST_COLLECTION, doc, {quiet: true});
+    assertEqual(result, expected, idx);
+  } catch (e) {
+    if(expected instanceof Error) {
+      assertEqual(e.message, expected.message, idx);
+    } else {
+      throw e;
+    }
+  }
 })
 
 db.getCollection(TEST_COLLECTION).drop()

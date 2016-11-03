@@ -68,13 +68,11 @@ function why(collectionName, doc, options={}){
   var collectionInfos = db.getCollectionInfos().filter(({name}) => name === collectionName)
 
   if(!collectionInfos.length) {
-    if(!options.quiet) print(collectionName, 'does not exist.')
-    return null
+    throw new Error(collectionName + ' does not exist.');
   }
 
   if(!collectionInfos[0].options.validator) {
-    if(!options.quiet) print(collectionName, 'does not have a validator.')
-    return null
+    throw new Error(collectionName + ' does not have a validator.');
   }
 
   var errors = traverseValidator(collectionInfos[0].options.validator, doc)
