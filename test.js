@@ -95,10 +95,8 @@ const SPEC = [{
   validator: {
 		"$or" : [
       {
-        "value" : {
-          "nested" : {
-            "$type" : "string"
-          },
+        "value.nested" : {
+          "$type" : "string"
         }
       },
 			{
