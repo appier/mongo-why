@@ -63,19 +63,24 @@ function traverseValidator(topValidator, newDoc){
   return errors
 }
 
-function why(collectionName, doc, options={}){
+function why(validatorOrCollectionName, doc, options={}){
 
-  var collectionInfos = db.getCollectionInfos().filter(({name}) => name === collectionName)
+  var validator = validatorOrCollectionName;
+  if(typeof validatorOrCollectionName === 'string') {
+    var collectionInfos = db.getCollectionInfos().filter(({name}) => name === validatorOrCollectionName)
 
-  if(!collectionInfos.length) {
-    throw new Error(collectionName + ' does not exist.');
+    if(!collectionInfos.length) {
+      throw new Error(validatorOrCollectionName + ' does not exist.');
+    }
+
+    validator = collectionInfos[0].options.validator;
   }
 
-  if(!collectionInfos[0].options.validator) {
-    throw new Error(collectionName + ' does not have a validator.');
+  if(!validator || !Object.keys(validator).length) {
+    throw new Error('The given validator / collection contains no validation rules.');
   }
 
-  var errors = traverseValidator(collectionInfos[0].options.validator, doc)
+  var errors = traverseValidator(validator, doc)
 
   if(!options.quiet) {
     if(errors.length) {

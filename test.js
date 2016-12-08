@@ -8,7 +8,7 @@ const SPEC = [{
   //
   validator: {},
   doc: {ha: 1},
-  expected: new Error(TEST_COLLECTION + ' does not have a validator.')
+  expected: new Error('The given validator / collection contains no validation rules.')
 }, {
   // Simple key-value
   //
@@ -127,9 +127,24 @@ SPEC.forEach(({validator, doc, expected}, idx) => {
     return
   }
 
+  // Try on DB collection
+  //
   try {
     var result = why(TEST_COLLECTION, doc, {quiet: true});
     assertEqual(result, expected, idx);
+  } catch (e) {
+    if(expected instanceof Error) {
+      assertEqual(e.message, expected.message, idx);
+    } else {
+      throw e;
+    }
+  }
+
+  // Try directly feeding validator
+  //
+  try {
+    var directResult = why(validator, doc, {quiet: true});
+    assertEqual(directResult, expected, idx);
   } catch (e) {
     if(expected instanceof Error) {
       assertEqual(e.message, expected.message, idx);
