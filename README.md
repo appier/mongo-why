@@ -1,4 +1,4 @@
-# mongo-why
+# mongo-why [![Build Status](https://travis-ci.org/appier/mongo-why.svg?branch=master)](https://travis-ci.org/appier/mongo-why)
 
 Tells you why mongo fails to validate your document.
 
