@@ -1,5 +1,8 @@
 # mongo-why
+
 Tells you why mongo fails to validate your document.
+
+In a project of Appier, we use mongodb validator as a "schema". However, as the "schema" grows, it is a pain to see which part of a document fails validation. `why.js` is a library that can be loaded inside mongo shell and provides a function called `why()`, which shows a list of validator rules that the doc has violated.
 
 ## Use case
 
@@ -68,7 +71,12 @@ why('CollectionName', documentToTest, {
 })
 ```
 
-## Unit test
+## Development
+
+There is only one file, `why.js`, a script that runs in `mongo` shell.
+It only has limited ES2016 support, this should be taken into account during development.
+
+### Unit Test
 
 ```
 $ mongo test.js
